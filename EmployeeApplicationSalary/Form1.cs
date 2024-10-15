@@ -1,5 +1,6 @@
-using System.Runtime.CompilerServices;
+using System;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace EmployeeApplicationSalary
 {
@@ -12,7 +13,7 @@ namespace EmployeeApplicationSalary
 
         private void btnComputeSalary_Click(object sender, EventArgs e)
         {
-                string pattern = @"^[a-zA-Z\s]+$";
+                string pattern = @"^[a-zA-Z\s]+$"; 
                 try
                 {
                     if (string.IsNullOrWhiteSpace(txtFirstName.Text) ||
@@ -67,72 +68,78 @@ namespace EmployeeApplicationSalary
             }
         
     }
+
     interface IEmployee
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Department { get; set; }
-        public string JobTitle { get; set; }
-        public double BasicSalary { get; set; }
-        public void computeSalary();
-
+        string FirstName { get; set; }
+        string LastName { get; set; }
+        string Department { get; set; }
+        string JobTitle { get; set; }
+        double BasicSalary { get; set; }
+        void getSalary();
     }
+
     class PartTimeEmployee : IEmployee
     {
-        private string first_name { get; set; }
-        private string last_name { get; set; }
-        private string department { get; set; }
-        private string job_title { get; set; }
-        private double basic_salary { get; set; }
+        private string firstName;
+        private string lastName;
+        private string department;
+        private string jobTitle;
+        private double basicSalary;
+
+        public string FirstName
+        {
+            get => firstName;
+            set => firstName = value;
+        }
+
+        public string LastName
+        {
+            get => lastName;
+            set => lastName = value;
+        }
+
+        public string Department
+        {
+            get => department;
+            set => department = value;
+        }
+
+        public string JobTitle
+        {
+            get => jobTitle;
+            set => jobTitle = value;
+        }
+
+        public double BasicSalary
+        {
+            get => basicSalary;
+            set => basicSalary = value;
+        }
+
         public double RatePerHour { get; set; }
         public int TotalHoursWorked { get; set; }
-        public void computeSalary()
+
+        public PartTimeEmployee(string firstName, string lastName, string department, string jobTitle, double ratePerHour, int totalHoursWorked)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            Department = department;
+            JobTitle = jobTitle;
+            RatePerHour = ratePerHour;
+            TotalHoursWorked = totalHoursWorked;
+            getSalary(); 
+        }
+
+        public void getSalary()
         {
             BasicSalary = RatePerHour * TotalHoursWorked;
         }
+
+        public string GetFirstName() => FirstName;
+        public string GetLastName() => LastName;
+        public string GetDepartment() => Department;
+        public string GetJobTitle() => JobTitle;
+        public double GetBasicSalary() => BasicSalary;
     }
-        private void btnComputeSalary_Click(object sender, EventArgs e)
-        {
-            string pattern = @"^[a-zA-Z\s]+$";
-            try
-            {
-                if (string.IsNullOrWhiteSpace(txtFirstName.Text) || string.IsNullOrWhiteSpace(txtLastName.Text) || string.IsNullOrWhiteSpace(txtDepartment.Text) || string.IsNullOrWhiteSpace(txtJobTitle.Text) || string.IsNullOrWhiteSpace(txtRatePerHour.Text) || string.IsNullOrWhiteSpace(txtTotalHoursWorked.Text))
-                {
-                    throw new Exception("Input fields cannot be empty!");
-                }
-
-                if(!Regex.IsMatch(txtFirstName.Text , pattern) || !Regex.IsMatch(txtLastName.Text , pattern) || !Regex.IsMatch(txtDepartment.Text, pattern) || !Regex.IsMatch(txtJobTitle.Text, pattern))
-                {
-                    throw new Exception("Input fields can only contain letters.");
-                }
-
-                    PartTimeEmployee employee = new PartTimeEmployee
-                {
-                    FirstName = txtFirstName.Text.Trim(),
-                    LastName = txtLastName.Text.Trim(),
-                    Department = txtDepartment.Text,
-                    JobTitle = txtJobTitle.Text,
-                    TotalHoursWorked = Convert.ToInt32(txtTotalHoursWorked.Text),
-                    RatePerHour = Convert.ToDouble(txtRatePerHour.Text)
-                };
-                employee.computeSalary();
-                lblBasicSalary.Text = employee.BasicSalary.ToString();
-                lblFirstName.Text = employee.FirstName.ToString();
-                lblLastName.Text = employee.LastName.ToString();
-            }
-            catch (FormatException)
-            {
-                MessageBox.Show("Please enter a numeric value.", "Input error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            catch (Exception ex) 
-            {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-    
-
-
-       
-
-
+}
